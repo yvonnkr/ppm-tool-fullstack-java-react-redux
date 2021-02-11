@@ -15,16 +15,33 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public Project saveOrUpdateProject(Project project){
+    public Project saveOrUpdateProject(Project project) {
 
         String projectId = project.getProjectIdentifier().toUpperCase();
 
-        try{
+        try {
             project.setProjectIdentifier(projectId);
             return projectRepository.save(project);
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new ProjectIdException("Project ID '" + projectId + "' already exists");
         }
+
+    }
+
+    public Project findProjectByIdentifier(String projectId) {
+
+        Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
+
+        if (project == null) {
+            throw new ProjectIdException("Project ID '" + projectId + "' does not exists");
+        }
+
+        return project;
+
+        /*
+        return Optional.ofNullable(projectRepository.findByProjectIdentifier(projectId.toUpperCase()))
+                .orElseThrow(() -> new ProjectIdException("Project ID '" + projectId + "' does not exists"));
+         */
 
     }
 }
