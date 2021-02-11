@@ -1,6 +1,7 @@
 package com.yvolabs.ppmtool.services;
 
 import com.yvolabs.ppmtool.domain.Project;
+import com.yvolabs.ppmtool.exceptions.ProjectIdException;
 import com.yvolabs.ppmtool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,14 @@ public class ProjectService {
 
     public Project saveOrUpdateProject(Project project){
 
-        // logic
-        return projectRepository.save(project);
+        String projectId = project.getProjectIdentifier().toUpperCase();
+
+        try{
+            project.setProjectIdentifier(projectId);
+            return projectRepository.save(project);
+        }catch(Exception e){
+            throw new ProjectIdException("Project ID '" + projectId + "' already exists");
+        }
 
     }
 }
