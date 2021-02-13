@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { createProject } from "../../actions/projectActions";
 
 const AddProject = () => {
   const [state, setState] = useState({
@@ -8,6 +11,9 @@ const AddProject = () => {
     startDate: "",
     endDate: "",
   });
+
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +35,7 @@ const AddProject = () => {
       end_date: state.endDate,
     };
 
-    console.log(newProject);
+    dispatch(createProject(newProject, history));
   };
 
   return (
