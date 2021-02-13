@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createProject } from "../../actions/projectActions";
@@ -10,10 +10,20 @@ const AddProject = () => {
     description: "",
     startDate: "",
     endDate: "",
+    errors: {},
   });
+
+  const errors = useSelector((state) => state.errors);
 
   const history = useHistory();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setState((prevState) => ({
+      ...prevState,
+      errors: { ...errors },
+    }));
+  }, [errors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,6 +50,8 @@ const AddProject = () => {
 
   return (
     <div>
+      {state.errors.message ? <h1>{state.errors.message}</h1> : null}
+
       <div className="project">
         <div className="container">
           <div className="row">
@@ -55,8 +67,9 @@ const AddProject = () => {
                     name="projectName"
                     value={state.projectName}
                     onChange={handleChange}
-                    required
+                    // required
                   />
+                  <p>{state.errors.projectName}</p>
                 </div>
                 <div className="form-group">
                   <input
@@ -66,8 +79,9 @@ const AddProject = () => {
                     name="projectIdentifier"
                     value={state.projectIdentifier}
                     onChange={handleChange}
-                    required
+                    // required
                   />
+                  <p>{state.errors.projectIdentifier}</p>
                 </div>
                 <div className="form-group">
                   <textarea
@@ -76,8 +90,9 @@ const AddProject = () => {
                     name="description"
                     value={state.description}
                     onChange={handleChange}
-                    required
+                    // required
                   />
+                  <p>{state.errors.description}</p>
                 </div>
                 <h6>Start Date</h6>
                 <div className="form-group">
@@ -87,7 +102,7 @@ const AddProject = () => {
                     name="startDate"
                     value={state.startDate}
                     onChange={handleChange}
-                    required
+                    // required
                   />
                 </div>
                 <h6>Estimated End Date</h6>
@@ -98,7 +113,7 @@ const AddProject = () => {
                     name="endDate"
                     value={state.endDate}
                     onChange={handleChange}
-                    required
+                    // required
                   />
                 </div>
 
