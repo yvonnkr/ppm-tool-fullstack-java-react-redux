@@ -1,5 +1,6 @@
 import axios from "axios";
 import { GET_ERRORS, CLEAR_ERRORS } from "./types";
+import { actionErrorsPayload } from "../helpers/actionErrors";
 
 export const createProject = (project, history) => async (dispatch) => {
   try {
@@ -13,10 +14,7 @@ export const createProject = (project, history) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: GET_ERRORS,
-      payload:
-        error.response && error.response.data
-          ? error.response.data
-          : { message: error.message },
+      payload: actionErrorsPayload(error),
     });
   }
 };

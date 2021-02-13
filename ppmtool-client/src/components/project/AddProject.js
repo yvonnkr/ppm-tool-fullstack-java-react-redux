@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createProject } from "../../actions/projectActions";
+import {
+  inputConditionalClassname,
+  displayInputErrorMessage,
+  displayErrorMessage,
+} from "../../helpers/viewErrors";
 
 const AddProject = () => {
   const [state, setState] = useState({
@@ -13,7 +18,10 @@ const AddProject = () => {
     errors: {},
   });
 
-  const errors = useSelector((state) => state.errors);
+  // prettier-ignore
+  const {projectName,projectIdentifier,description,startDate,endDate,errors} = state
+
+  const stateErrors = useSelector((state) => state.errors);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -21,9 +29,9 @@ const AddProject = () => {
   useEffect(() => {
     setState((prevState) => ({
       ...prevState,
-      errors: { ...errors },
+      errors: { ...stateErrors },
     }));
-  }, [errors]);
+  }, [stateErrors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,82 +46,87 @@ const AddProject = () => {
     e.preventDefault();
 
     const newProject = {
-      projectName: state.projectName,
-      projectIdentifier: state.projectIdentifier,
-      description: state.description,
-      start_date: state.startDate,
-      end_date: state.endDate,
+      projectName,
+      projectIdentifier,
+      description,
+      start_date: startDate,
+      end_date: endDate,
     };
 
     dispatch(createProject(newProject, history));
   };
 
+  // prettier-ignore
   return (
     <div>
-      {state.errors.message ? <h1>{state.errors.message}</h1> : null}
 
       <div className="project">
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
+
               <h5 className="display-4 text-center">Create Project form</h5>
+              {errors.message &&  displayErrorMessage(errors.message)}
               <hr />
+
               <form onSubmit={onSubmit}>
                 <div className="form-group">
                   <input
                     type="text"
-                    className="form-control form-control-lg "
+                    className={inputConditionalClassname(errors.projectName)}
                     placeholder="Project Name"
                     name="projectName"
-                    value={state.projectName}
+                    value={projectName}
                     onChange={handleChange}
-                    // required
                   />
-                  <p>{state.errors.projectName}</p>
+
+                  {errors.projectName && displayInputErrorMessage(errors.projectName)}               
                 </div>
+
                 <div className="form-group">
                   <input
                     type="text"
-                    className="form-control form-control-lg"
+                    className={inputConditionalClassname(errors.projectIdentifier)}
                     placeholder="Unique Project ID"
                     name="projectIdentifier"
-                    value={state.projectIdentifier}
+                    value={projectIdentifier}
                     onChange={handleChange}
-                    // required
                   />
-                  <p>{state.errors.projectIdentifier}</p>
+
+                   {errors.projectIdentifier && displayInputErrorMessage(errors.projectIdentifier)}               
                 </div>
+
                 <div className="form-group">
                   <textarea
-                    className="form-control form-control-lg"
+                    className={inputConditionalClassname(errors.description)}
                     placeholder="Project Description"
                     name="description"
-                    value={state.description}
+                    value={description}
                     onChange={handleChange}
-                    // required
                   />
-                  <p>{state.errors.description}</p>
+
+                  {errors.description && displayInputErrorMessage(errors.description)}
                 </div>
+
                 <h6>Start Date</h6>
                 <div className="form-group">
                   <input
                     type="date"
                     className="form-control form-control-lg"
                     name="startDate"
-                    value={state.startDate}
+                    value={startDate}
                     onChange={handleChange}
-                    // required
                   />
                 </div>
+
                 <h6>Estimated End Date</h6>
                 <div className="form-group">
                   <input
                     type="date"
                     className="form-control form-control-lg"
                     name="endDate"
-                    value={state.endDate}
+                    value={endDate}
                     onChange={handleChange}
-                    // required
                   />
                 </div>
 
