@@ -6,7 +6,7 @@ import {
   inputConditionalClassname,
   displayInputErrorMessage,
   displayErrorMessage,
-} from "../../helpers/viewErrors";
+} from "../../helpers/validationErrors";
 
 const AddProject = () => {
   const [state, setState] = useState({
