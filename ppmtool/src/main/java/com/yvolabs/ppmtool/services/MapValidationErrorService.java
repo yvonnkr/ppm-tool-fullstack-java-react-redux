@@ -5,17 +5,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class MapValidationErrorService {
 
     public ResponseEntity<?> mapValidationErrorResult(BindingResult result){
+//        if(result.hasErrors()){
+//            Map<String, String> errorMap = result.getFieldErrors()
+//                    .stream()
+//                    .collect(Collectors.toMap(e -> e.getField(), e -> e.getDefaultMessage()));
+//
+//            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+//        }
+
         if(result.hasErrors()){
-            Map<String, String> errorMap = result.getFieldErrors()
+            Map<String, String> errorMap = new HashMap<>();
+
+            result.getFieldErrors()
                     .stream()
-                    .collect(Collectors.toMap(e -> e.getField(), e -> e.getDefaultMessage()));
+                    .forEach(e -> errorMap.put(e.getField(),e.getDefaultMessage()) );
 
             return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
         }
