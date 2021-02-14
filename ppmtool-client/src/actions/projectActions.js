@@ -55,12 +55,12 @@ export const getProject = (id, history) => async (dispatch) => {
       type: GET_PROJECT_SUCCESS,
       payload: data,
     });
-
-    //TODO: history
   } catch (error) {
     dispatch({
       type: GET_ERRORS,
       payload: actionErrorsPayload(error),
     });
+
+    history.push("/dashboard");
   }
 };
