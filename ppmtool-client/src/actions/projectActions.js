@@ -5,6 +5,8 @@ import {
   GET_PROJECTS_SUCCESS,
   GET_PROJECT_REQUEST,
   GET_PROJECT_SUCCESS,
+  DELETE_PROJECT_REQUEST,
+  DELETE_PROJECT_SUCCESS,
 } from "../actions/types";
 import { actionErrorsPayload } from "../helpers/actionErrors";
 
@@ -62,5 +64,24 @@ export const getProject = (id, history) => async (dispatch) => {
     });
 
     history.push("/dashboard");
+  }
+};
+
+export const deleteProject = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: CLEAR_ERRORS });
+    dispatch({ type: DELETE_PROJECT_REQUEST });
+
+    await axios.delete(`http://localhost:8080/api/projects/${id}`);
+
+    dispatch({
+      type: DELETE_PROJECT_SUCCESS,
+      payload: id,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: actionErrorsPayload(error),
+    });
   }
 };

@@ -1,8 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { deleteProject } from "../../actions/projectActions";
+import { useDispatch } from "react-redux";
 
 const ProjectItem = ({ project }) => {
   const { projectIdentifier, projectName, description } = project;
+
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    dispatch(deleteProject(projectIdentifier));
+  };
 
   return (
     <div className="container">
@@ -24,16 +32,16 @@ const ProjectItem = ({ project }) => {
                   <i className="fa fa-flag-checkered pr-1"> Project Board </i>
                 </li>
               </a>
+
               <Link to={`/updateProject/${projectIdentifier}`}>
                 <li className="list-group-item update">
                   <i className="fa fa-edit pr-1"> Update Project Info</i>
                 </li>
               </Link>
-              <a href="">
-                <li className="list-group-item delete">
-                  <i className="fa fa-minus-circle pr-1"> Delete Project</i>
-                </li>
-              </a>
+
+              <li className="list-group-item delete" onClick={handleDelete}>
+                <i className="fa fa-minus-circle pr-1"> Delete Project</i>
+              </li>
             </ul>
           </div>
         </div>

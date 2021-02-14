@@ -5,7 +5,6 @@ import { getProject, createProject } from "../../actions/projectActions";
 import {
   inputConditionalClassname,
   displayInputErrorMessage,
-  displayErrorMessage,
 } from "../../helpers/validationErrors";
 
 const UpdateProject = () => {
@@ -125,7 +124,7 @@ const UpdateProject = () => {
                   onChange={handleChange}
                 />
               </div>
-              
+
               <h6>Estimated End Date</h6>
               <div className="form-group">
                 <input

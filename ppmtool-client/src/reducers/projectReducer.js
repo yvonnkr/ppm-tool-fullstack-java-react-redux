@@ -3,6 +3,8 @@ import {
   GET_PROJECTS_SUCCESS,
   GET_PROJECT_REQUEST,
   GET_PROJECT_SUCCESS,
+  DELETE_PROJECT_REQUEST,
+  DELETE_PROJECT_SUCCESS,
 } from "../actions/types";
 import { GET_ERRORS } from "../actions/types";
 
@@ -26,6 +28,17 @@ export const projectReducer = (state = initialState, action) => {
         project: action.payload,
         loading: false,
         success: true,
+      };
+
+    case DELETE_PROJECT_REQUEST:
+      return { ...state, loading: true };
+    case DELETE_PROJECT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        projects: state.projects.filter(
+          (p) => p.projectIdentifier !== action.payload
+        ),
       };
 
     case GET_ERRORS:
