@@ -61,8 +61,8 @@ const UpdateProject = () => {
       projectName: state.projectName,
       projectIdentifier: state.projectIdentifier,
       description: state.description,
-      startDate: state.start_date,
-      endDate: state.end_date,
+      start_date: state.startDate,
+      end_date: state.endDate,
     };
 
     dispatch(createProject(updateProject, history));
