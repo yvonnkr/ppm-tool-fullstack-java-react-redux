@@ -1,10 +1,14 @@
-import { GET_PROJECTS_REQUEST, GET_PROJECTS_SUCCESS } from "../actions/types";
+import {
+  GET_PROJECTS_REQUEST,
+  GET_PROJECTS_SUCCESS,
+  GET_PROJECT_REQUEST,
+  GET_PROJECT_SUCCESS,
+} from "../actions/types";
 import { GET_ERRORS } from "../actions/types";
 
 const initialState = {
   projects: [],
   project: {},
-  loading: false,
 };
 
 export const projectReducer = (state = initialState, action) => {
@@ -13,6 +17,17 @@ export const projectReducer = (state = initialState, action) => {
       return { projects: [], project: {}, loading: true };
     case GET_PROJECTS_SUCCESS:
       return { ...state, projects: action.payload, loading: false };
+
+    case GET_PROJECT_REQUEST:
+      return { projects: [], project: {}, loading: true };
+    case GET_PROJECT_SUCCESS:
+      return {
+        ...state,
+        project: action.payload,
+        loading: false,
+        success: true,
+      };
+
     case GET_ERRORS:
       return { ...state, loading: false };
 
