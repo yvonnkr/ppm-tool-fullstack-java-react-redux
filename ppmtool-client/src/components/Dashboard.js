@@ -7,11 +7,19 @@ import { getProjects } from "../actions/projectActions";
 const Dashboard = () => {
   const dispatch = useDispatch();
 
-  const projects = useSelector((state) => state.project.projects);
+  const { projects, loading } = useSelector((state) => state.project);
 
   useEffect(() => {
     dispatch(getProjects());
   }, []);
+
+  if (loading) {
+    return (
+      <div className="container">
+        <h3>Loading ...</h3>
+      </div>
+    );
+  }
 
   return (
     <div className="projects">
