@@ -4,6 +4,8 @@ package com.yvolabs.ppmtool.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Backlog {
@@ -16,11 +18,12 @@ public class Backlog {
     private String  projectIdentifier;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(nullable = false) // name=project_id
     @JsonIgnore // to prevent infinite recursion (set in child relation)
     private Project project;
 
-    // todo: OneToMany with projectTasks
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="backlog" )
+    private List<ProjectTask> projectTasks = new ArrayList<>();
 
 
     public Backlog() {
@@ -56,5 +59,13 @@ public class Backlog {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public List<ProjectTask> getProjectTasks() {
+        return projectTasks;
+    }
+
+    public void setProjectTasks(List<ProjectTask> projectTasks) {
+        this.projectTasks = projectTasks;
     }
 }
