@@ -23,9 +23,9 @@ public class ProjectTask {
     private Integer priority;
     private Date dueDate;
 
-   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-   @JoinColumn( updatable = false, nullable = false) //name = backlog_id
-   @JsonIgnore //to prevent infinite recursion (set in child relation)
+   @ManyToOne(fetch = FetchType.EAGER)
+   @JoinColumn( updatable = false, nullable = false)
+   @JsonIgnore
     private Backlog backlog;
     
     @Column(updatable = false)
