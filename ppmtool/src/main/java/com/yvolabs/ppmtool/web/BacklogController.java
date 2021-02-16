@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @CrossOrigin("*")
 public class BacklogController {
     private final MapValidationErrorService mapValidationErrorService;
-    private ProjectTaskService projectTaskService;
+    private final ProjectTaskService projectTaskService;
 
     @Autowired
     public BacklogController(MapValidationErrorService mapValidationErrorService, ProjectTaskService projectTaskService) {
@@ -42,5 +42,11 @@ public class BacklogController {
     public Iterable<ProjectTask> getProjectBacklog(@PathVariable("backlog_id") String backlog_id) {
         return projectTaskService.findBacklogById(backlog_id);
 
+    }
+
+    @GetMapping("/{backlog_id}/{pt_id}")
+    public ResponseEntity<?> getProjectTask(@PathVariable("backlog_id") String backlog_id, @PathVariable("pt_id") String pt_id){
+        ProjectTask projectTask = projectTaskService.findPTByProjectSequence(backlog_id, pt_id);
+        return new ResponseEntity<>( projectTask, HttpStatus.OK);
     }
 }
