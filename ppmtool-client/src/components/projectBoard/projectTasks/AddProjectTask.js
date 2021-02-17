@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addProjectTask } from "../../../actions/backlogActions";
+import {
+  inputConditionalClassname,
+  displayInputErrorMessage,
+} from "../../../helpers/validationErrors";
 
 const AddProjectTask = () => {
   const { id } = useParams();
@@ -20,6 +24,15 @@ const AddProjectTask = () => {
 
   // prettier-ignore
   const {summary, acceptanceCriteria, status, priority, dueDate, projectIdentifier, errors,} = state;
+
+  const stateErrors = useSelector((state) => state.errors);
+
+  useEffect(() => {
+    setState((prevState) => ({
+      ...prevState,
+      errors: { ...stateErrors },
+    }));
+  }, [stateErrors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,12 +71,13 @@ const AddProjectTask = () => {
               <div className="form-group">
                 <input
                   type="text"
-                  className="form-control form-control-lg"
+                  className={inputConditionalClassname(errors.summary)}
                   name="summary"
                   placeholder="Project Task summary"
                   value={summary}
                   onChange={handleChange}
                 />
+                {errors.summary && displayInputErrorMessage(errors.summary)}
               </div>
               <div className="form-group">
                 <textarea
