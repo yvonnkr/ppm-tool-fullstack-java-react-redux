@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Backlog from "./Backlog";
+import { getBacklog } from "../../actions/backlogActions";
 
 const ProjectBoard = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const projectTasks = useSelector((state) => state.backlog.project_tasks);
+
+  useEffect(() => {
+    dispatch(getBacklog(id));
+  }, []);
 
   return (
     <div className="container">
