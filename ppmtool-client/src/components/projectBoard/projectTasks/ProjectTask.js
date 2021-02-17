@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const ProjectTask = ({ projectTask }) => {
   let priorityString;
@@ -29,9 +30,12 @@ const ProjectTask = ({ projectTask }) => {
         <p className="card-text text-truncate ">
           {projectTask.acceptanceCriteria}
         </p>
-        <a href="" className="btn btn-info">
+        <Link
+          to={`/updateProjectTask/${projectTask.projectIdentifier}/${projectTask.projectSequence}`}
+          className="btn btn-info"
+        >
           View / Update
-        </a>
+        </Link>
 
         <button className="btn btn-danger ml-4">Delete</button>
       </div>
