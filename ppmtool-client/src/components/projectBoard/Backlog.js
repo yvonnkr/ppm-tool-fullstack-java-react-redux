@@ -1,7 +1,11 @@
 import React from "react";
 import ProjectTask from "./projectTasks/ProjectTask";
 
-const Backlog = () => {
+const Backlog = ({ projectTasks }) => {
+  const tasks = projectTasks.map((projectTask) => (
+    <ProjectTask key={projectTask.id} projectTask={projectTask} />
+  ));
+
   return (
     <div className="container">
       <div className="row">
@@ -11,7 +15,7 @@ const Backlog = () => {
               <h3>TO DO</h3>
             </div>
           </div>
-          <ProjectTask />
+          {tasks}
         </div>
 
         <div className="col-md-4">

@@ -8,7 +8,7 @@ const ProjectBoard = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const projectTasks = useSelector((state) => state.backlog.project_tasks);
+  const { project_tasks } = useSelector((state) => state.backlog);
 
   useEffect(() => {
     dispatch(getBacklog(id));
@@ -21,7 +21,7 @@ const ProjectBoard = () => {
       </Link>
       <br />
       <hr />
-      <Backlog />
+      <Backlog projectTasks={project_tasks} />
     </div>
   );
 };

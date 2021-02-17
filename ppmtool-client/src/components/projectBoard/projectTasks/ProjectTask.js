@@ -1,15 +1,15 @@
 import React from "react";
 
-const ProjectTask = () => {
+const ProjectTask = ({ projectTask }) => {
   return (
     <div className="card mb-1 bg-light">
       <div className="card-header text-primary">
-        ID: projectSequence -- Priority: priorityString
+        ID: {projectTask.projectSequence} -- Priority: {projectTask.priority}
       </div>
       <div className="card-body bg-light">
-        <h5 className="card-title">project_task.summary</h5>
+        <h5 className="card-title">{projectTask.summary}</h5>
         <p className="card-text text-truncate ">
-          project_task.acceptanceCriteria
+          {projectTask.acceptanceCriteria}
         </p>
         <a href="" className="btn btn-info">
           View / Update
