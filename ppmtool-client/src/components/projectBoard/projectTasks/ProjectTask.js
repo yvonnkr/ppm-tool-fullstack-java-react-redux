@@ -15,7 +15,7 @@ const ProjectTask = ({ projectTask }) => {
   }
 
   if (projectTask.priority === 3) {
-    priorityClass = "bg-info text-light";
+    priorityClass = "bg-secondary text-light";
     priorityString = "LOW";
   }
 
