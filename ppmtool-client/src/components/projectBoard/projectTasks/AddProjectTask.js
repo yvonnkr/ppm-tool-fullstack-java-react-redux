@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { addProjectTask } from "../../../actions/backlogActions";
 
 const AddProjectTask = () => {
   const { id } = useParams();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     summary: "",
@@ -18,6 +21,29 @@ const AddProjectTask = () => {
   // prettier-ignore
   const {summary, acceptanceCriteria, status, priority, dueDate, projectIdentifier, errors,} = state;
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    const newTask = {
+      summary,
+      acceptanceCriteria,
+      status,
+      priority,
+      dueDate,
+    };
+
+    dispatch(addProjectTask(projectIdentifier, newTask, history));
+  };
+
   return (
     <div className="add-PBI">
       <div className="container">
@@ -28,7 +54,7 @@ const AddProjectTask = () => {
             </Link>
             <h4 className="display-4 text-center">Add Project Task</h4>
             <p className="lead text-center">Project Name + Project Code</p>
-            <form>
+            <form onSubmit={onSubmit}>
               <div className="form-group">
                 <input
                   type="text"
@@ -36,6 +62,7 @@ const AddProjectTask = () => {
                   name="summary"
                   placeholder="Project Task summary"
                   value={summary}
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group">
@@ -44,6 +71,7 @@ const AddProjectTask = () => {
                   placeholder="Acceptance Criteria"
                   name="acceptanceCriteria"
                   value={acceptanceCriteria}
+                  onChange={handleChange}
                 />
               </div>
               <h6>Due Date</h6>
@@ -53,6 +81,7 @@ const AddProjectTask = () => {
                   className="form-control form-control-lg"
                   name="dueDate"
                   value={dueDate}
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group">
@@ -60,6 +89,7 @@ const AddProjectTask = () => {
                   className="form-control form-control-lg"
                   name="priority"
                   value={priority}
+                  onChange={handleChange}
                 >
                   <option value={0}>Select Priority</option>
                   <option value={1}>High</option>
@@ -73,6 +103,7 @@ const AddProjectTask = () => {
                   className="form-control form-control-lg"
                   name="status"
                   value={status}
+                  onChange={handleChange}
                 >
                   <option value="">Select Status</option>
                   <option value="TO_DO">TO DO</option>
