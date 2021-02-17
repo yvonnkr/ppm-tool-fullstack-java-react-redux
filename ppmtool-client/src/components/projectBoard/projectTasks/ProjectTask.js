@@ -1,10 +1,28 @@
 import React from "react";
 
 const ProjectTask = ({ projectTask }) => {
+  let priorityString;
+  let priorityClass;
+
+  if (projectTask.priority === 1) {
+    priorityClass = "bg-danger text-light";
+    priorityString = "HIGH";
+  }
+
+  if (projectTask.priority === 2) {
+    priorityClass = "bg-warning text-light";
+    priorityString = "MEDIUM";
+  }
+
+  if (projectTask.priority === 3) {
+    priorityClass = "bg-info text-light";
+    priorityString = "LOW";
+  }
+
   return (
     <div className="card mb-1 bg-light">
-      <div className="card-header text-primary">
-        ID: {projectTask.projectSequence} -- Priority: {projectTask.priority}
+      <div className={`card-header text-primary ${priorityClass}`}>
+        ID: {projectTask.projectSequence} -- Priority: {priorityString}
       </div>
       <div className="card-body bg-light">
         <h5 className="card-title">{projectTask.summary}</h5>

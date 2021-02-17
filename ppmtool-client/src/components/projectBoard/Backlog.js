@@ -6,6 +6,24 @@ const Backlog = ({ projectTasks }) => {
     <ProjectTask key={projectTask.id} projectTask={projectTask} />
   ));
 
+  let todoItems = [];
+  let inProgressItems = [];
+  let doneItems = [];
+
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].props.projectTask.status === "TO_DO") {
+      todoItems.push(tasks[i]);
+    }
+
+    if (tasks[i].props.projectTask.status === "IN_PROGRESS") {
+      inProgressItems.push(tasks[i]);
+    }
+
+    if (tasks[i].props.projectTask.status === "DONE") {
+      doneItems.push(tasks[i]);
+    }
+  }
+
   return (
     <div className="container">
       <div className="row">
@@ -15,7 +33,7 @@ const Backlog = ({ projectTasks }) => {
               <h3>TO DO</h3>
             </div>
           </div>
-          {tasks}
+          {todoItems}
         </div>
 
         <div className="col-md-4">
@@ -24,10 +42,7 @@ const Backlog = ({ projectTasks }) => {
               <h3>In Progress</h3>
             </div>
           </div>
-          {
-            //  <!-- SAMPLE PROJECT TASK STARTS HERE -->
-            //         <!-- SAMPLE PROJECT TASK ENDS HERE -->
-          }
+          {inProgressItems}
         </div>
 
         <div className="col-md-4">
@@ -36,10 +51,7 @@ const Backlog = ({ projectTasks }) => {
               <h3>Done</h3>
             </div>
           </div>
-          {
-            // <!-- SAMPLE PROJECT TASK STARTS HERE -->
-            // <!-- SAMPLE PROJECT TASK ENDS HERE -->
-          }
+          {doneItems}
         </div>
       </div>
     </div>
