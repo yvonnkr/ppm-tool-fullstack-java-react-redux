@@ -20,6 +20,7 @@ const App = () => {
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/addProject" component={AddProject} />
           <Route exact path="/updateProject/:id" component={UpdateProject} />
+          <Route exact path="/" component={Dashboard} />
         </div>
       </BrowserRouter>
     </Provider>
