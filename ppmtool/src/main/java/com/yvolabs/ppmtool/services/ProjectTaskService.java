@@ -44,8 +44,8 @@ public class ProjectTaskService {
             projectTask.setProjectIdentifier(projectIdentifier);
 
             //Initial priority when priority is null
-            if (projectTask.getPriority() == null) {
-                // later will also need to check if(projectTask.getPriority() == 0 ) to handle ui form
+            if (projectTask.getPriority() == 0 || projectTask.getPriority()==null) {
+
                 projectTask.setPriority(3);
             }
             //Initial status when status is null
