@@ -1,6 +1,7 @@
 package com.yvolabs.ppmtool.services;
 
 import com.yvolabs.ppmtool.domain.User;
+import com.yvolabs.ppmtool.exceptions.UsernameAlreadyExistsException;
 import com.yvolabs.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,13 +19,16 @@ public class UserService {
     }
 
     public User saveUser (User newUser){
+        try{
+
         String encodedPassword = bCryptPasswordEncoder.encode(newUser.getPassword());
         newUser.setPassword(encodedPassword);
-
-        // todo: Username has to be unique (exception)
 
         // todo: Make sure that password and confirmPassword match
         // todo: We don't persist or show the confirmPassword
         return userRepository.save(newUser);
+        }catch(Exception e){
+            throw new UsernameAlreadyExistsException("Username " + newUser.getUsername() + " already exists");
+        }
     }
 }
