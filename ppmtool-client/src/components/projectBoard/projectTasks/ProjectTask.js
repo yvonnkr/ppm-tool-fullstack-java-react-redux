@@ -1,7 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { deleteProjectTask } from "../../../actions/backlogActions";
+import { useDispatch } from "react-redux";
 
 const ProjectTask = ({ projectTask }) => {
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    dispatch(
+      deleteProjectTask(
+        projectTask.projectIdentifier,
+        projectTask.projectSequence
+      )
+    );
+  };
+
   let priorityString;
   let priorityClass;
 
@@ -37,7 +50,9 @@ const ProjectTask = ({ projectTask }) => {
           View / Update
         </Link>
 
-        <button className="btn btn-danger ml-4">Delete</button>
+        <button className="btn btn-danger ml-4" onClick={handleDelete}>
+          Delete
+        </button>
       </div>
     </div>
   );
