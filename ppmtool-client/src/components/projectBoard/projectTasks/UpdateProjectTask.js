@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getProjectTask } from "../../../actions/backlogActions";
+import {
+  getProjectTask,
+  updateProjectTask,
+} from "../../../actions/backlogActions";
+import {
+  inputConditionalClassname,
+  displayInputErrorMessage,
+} from "../../../helpers/validationErrors";
 
 const UpdateProjectTask = () => {
   const [state, setState] = useState({
@@ -26,9 +33,11 @@ const UpdateProjectTask = () => {
     priority,
     dueDate,
     projectIdentifier,
-    create_At,
+    created_At,
   } = useSelector((state) => state.backlog.project_task);
+
   const { loading, success } = useSelector((state) => state.backlog);
+  const stateErrors = useSelector((state) => state.errors);
 
   const dispatch = useDispatch();
   const { backlog_id, pt_id } = useParams();
@@ -51,10 +60,17 @@ const UpdateProjectTask = () => {
         priority: priority == null ? "" : priority,
         dueDate: dueDate == null ? "" : dueDate,
         projectIdentifier: projectIdentifier == null ? "" : projectIdentifier,
-        create_At: create_At == null ? "" : create_At,
+        created_At: created_At == null ? "" : created_At,
       }));
     }
-  }, [success]);
+
+    if (stateErrors) {
+      setState((prevState) => ({
+        ...prevState,
+        errors: { ...stateErrors },
+      }));
+    }
+  }, [success, stateErrors]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +84,7 @@ const UpdateProjectTask = () => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const UpdateProjectTask = {
+    const updatedProjectTask = {
       id: state.id,
       projectSequence: state.projectSequence,
       summary: state.summary,
@@ -77,11 +93,10 @@ const UpdateProjectTask = () => {
       priority: state.priority,
       dueDate: state.dueDate,
       projectIdentifier: state.projectIdentifier,
-      create_At: state.create_At,
+      created_At: state.created_At,
     };
 
-    console.log(UpdateProjectTask);
-    //TODO: updateProjectTask action
+    dispatch(updateProjectTask(backlog_id, pt_id, updatedProjectTask, history));
   };
 
   return (
@@ -101,12 +116,14 @@ const UpdateProjectTask = () => {
               <div className="form-group">
                 <input
                   type="text"
-                  className="form-control form-control-lg"
+                  className={inputConditionalClassname(state.errors.summary)}
                   name="summary"
                   placeholder="Project Task summary"
                   value={state.summary}
                   onChange={handleChange}
                 />
+                {state.errors.summary &&
+                  displayInputErrorMessage(state.errors.summary)}
               </div>
               <div className="form-group">
                 <textarea
