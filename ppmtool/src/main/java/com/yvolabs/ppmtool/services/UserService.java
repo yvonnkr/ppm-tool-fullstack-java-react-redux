@@ -18,16 +18,21 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public User saveUser (User newUser){
-        try{
+    public User saveUser(User newUser) {
+        try {
 
-        String encodedPassword = bCryptPasswordEncoder.encode(newUser.getPassword());
-        newUser.setPassword(encodedPassword);
+            String encodedPassword = bCryptPasswordEncoder.encode(newUser.getPassword());
 
-        // todo: Make sure that password and confirmPassword match
-        // todo: We don't persist or show the confirmPassword
-        return userRepository.save(newUser);
-        }catch(Exception e){
+            newUser.setPassword(encodedPassword);
+
+            newUser.setUsername(newUser.getUsername()); // if not unique will throw ex
+
+            newUser.setConfirmPassword(""); // We don't persist or show the confirmPassword in response
+
+            return userRepository.save(newUser);
+
+        } catch (Exception e) {
+
             throw new UsernameAlreadyExistsException("Username " + newUser.getUsername() + " already exists");
         }
     }
