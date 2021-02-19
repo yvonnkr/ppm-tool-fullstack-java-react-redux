@@ -4,6 +4,7 @@ import com.yvolabs.ppmtool.domain.Backlog;
 import com.yvolabs.ppmtool.domain.Project;
 import com.yvolabs.ppmtool.domain.User;
 import com.yvolabs.ppmtool.exceptions.ProjectIdException;
+import com.yvolabs.ppmtool.exceptions.ProjectNotFoundException;
 import com.yvolabs.ppmtool.repositories.BacklogRepository;
 import com.yvolabs.ppmtool.repositories.ProjectRepository;
 import com.yvolabs.ppmtool.repositories.UserRepository;
@@ -54,7 +55,7 @@ public class ProjectService {
 
     }
 
-    public Project findProjectByIdentifier(String projectId) {
+    public Project findProjectByIdentifier(String projectId, String username) {
 
         Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
 
@@ -62,22 +63,21 @@ public class ProjectService {
             throw new ProjectIdException("Project ID '" + projectId + "' does not exists");
         }
 
-        return project;
-
-
-    }
-
-    public Iterable<Project> findAllProjects() {
-        return projectRepository.findAll();
-    }
-
-    public void deleteProjectByIdentifier(String projectId) {
-        Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
-
-        if(project == null){
-            throw new ProjectIdException("Project with id '" + projectId + "' not found");
+        if(!project.getProjectLeader().equals(username)){
+            throw new ProjectNotFoundException("Project not found in your account,not authorized");
         }
 
+        return project;
+
+    }
+
+    public Iterable<Project> findAllProjects(String username) {
+        return projectRepository.findAllByProjectLeader(username);
+    }
+
+    public void deleteProjectByIdentifier(String projectId,String username) {
+
+        Project project = findProjectByIdentifier(projectId,username);
         projectRepository.delete(project);
     }
 }
