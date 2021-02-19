@@ -23,6 +23,7 @@ public class ProjectTaskService {
         this.projectTaskRepository = projectTaskRepository;
     }
 
+
     public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
 
         try {
@@ -41,18 +42,20 @@ public class ProjectTaskService {
 
             // Add sequence to Project Task
             projectTask.setProjectSequence(projectIdentifier + "-" + backlogSequence);
+
             projectTask.setProjectIdentifier(projectIdentifier);
 
-            //Initial priority when priority is null
-            if (projectTask.getPriority() == 0 || projectTask.getPriority()==null) {
-
-                projectTask.setPriority(3);
-            }
             //Initial status when status is null
-            if (projectTask.getStatus().equals("") || projectTask.getStatus() == null) {
+            if (projectTask.getStatus() == null || projectTask.getStatus().equals("") ) {
                 projectTask.setStatus("TO_DO");
                 // could use enums instead
             }
+
+            //Initial priority when priority is null
+            if (projectTask.getPriority() == null || projectTask.getPriority() == 0) {
+                projectTask.setPriority(3);
+            }
+
 
             return projectTaskRepository.save(projectTask);
 
@@ -104,7 +107,7 @@ public class ProjectTaskService {
 
     }
 
-    public void deletePTByProjectSequence(String backlog_id, String pt_id){
+    public void deletePTByProjectSequence(String backlog_id, String pt_id) {
         ProjectTask projectTask = findPTByProjectSequence(backlog_id, pt_id);
 
         /* Fixed backlog/projectTask relationship Instead
