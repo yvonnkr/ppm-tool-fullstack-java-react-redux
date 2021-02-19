@@ -17,6 +17,7 @@ import static com.yvolabs.ppmtool.security.SecurityConstants.SECRET;
 
 @Component
 public class JwtTokenProvider {
+    private SecretKey secretKey = Keys.hmacShaKeyFor(SECRET.getBytes());
 
     // Generate the token
     public String generateToken(Authentication authentication){
@@ -30,14 +31,15 @@ public class JwtTokenProvider {
         claims.put("username", user.getUsername());
         claims.put("fullName", user.getFullName());
 
-        SecretKey secretKey = Keys.hmacShaKeyFor(SECRET.getBytes());
+//        SecretKey secretKey = Keys.hmacShaKeyFor(SECRET.getBytes());
 
         return Jwts.builder()
                 .setSubject(userId)
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(secretKey, SignatureAlgorithm.HS512)
+//                .signWith(secretKey, SignatureAlgorithm.HS512)
+                .signWith(secretKey)
                 .compact();
 //                .signWith(SignatureAlgorithm.HS512, SECRET) //deprecated
 
@@ -45,8 +47,10 @@ public class JwtTokenProvider {
 
     // Validated the token
     public boolean validateToken(String token){
+
         try{
-            Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token);
+//            Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
         }catch (SignatureException ex){
             System.out.println("Invalid JWT Signature");
@@ -64,7 +68,8 @@ public class JwtTokenProvider {
 
     // Get user id from the token
     public Long getUserIdFromJWT(String token){
-        Claims claims = Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token).getBody();
+//        Claims claims = Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
         String id = (String)claims.get("id");
 
         return Long.parseLong(id);
