@@ -2,9 +2,11 @@ package com.yvolabs.ppmtool.services;
 
 import com.yvolabs.ppmtool.domain.Backlog;
 import com.yvolabs.ppmtool.domain.Project;
+import com.yvolabs.ppmtool.domain.User;
 import com.yvolabs.ppmtool.exceptions.ProjectIdException;
 import com.yvolabs.ppmtool.repositories.BacklogRepository;
 import com.yvolabs.ppmtool.repositories.ProjectRepository;
+import com.yvolabs.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +14,23 @@ import org.springframework.stereotype.Service;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final BacklogRepository backlogRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, BacklogRepository backlogRepository) {
+    public ProjectService(ProjectRepository projectRepository, BacklogRepository backlogRepository, UserRepository userRepository) {
         this.projectRepository = projectRepository;
         this.backlogRepository = backlogRepository;
+        this.userRepository = userRepository;
     }
 
-    public Project saveOrUpdateProject(Project project) {
+    public Project saveOrUpdateProject(Project project, String username) {
 
         String projectId = project.getProjectIdentifier().toUpperCase();
 
         try {
+            User user = userRepository.findByUsername(username);
+            project.setUser(user);
+            project.setProjectLeader(user.getUsername());
             project.setProjectIdentifier(projectId);
 
             // case: create new project
