@@ -28,6 +28,15 @@ public class ProjectService {
 
         String projectId = project.getProjectIdentifier().toUpperCase();
 
+        if (project.getId() != null) {
+            Project existingProject = projectRepository.findByProjectIdentifier(project.getProjectIdentifier());
+            if (existingProject != null && (!existingProject.getProjectLeader().equals(username))) {
+                throw new ProjectNotFoundException("Project not found in your account, not authorized");
+            } else if (existingProject == null) {
+                throw new ProjectNotFoundException("Project with ID: '" + project.getProjectIdentifier() + "' cannot be updated because it doesn't exist");
+            }
+        }
+
         try {
             User user = userRepository.findByUsername(username);
             project.setUser(user);
@@ -35,7 +44,7 @@ public class ProjectService {
             project.setProjectIdentifier(projectId);
 
             // case: create new project
-            if(project.getId() == null){
+            if (project.getId() == null) {
                 Backlog backlog = new Backlog();
                 project.setBacklog(backlog);
                 backlog.setProject(project);
@@ -43,7 +52,7 @@ public class ProjectService {
             }
 
             // case: update project
-            if(project.getId() != null){
+            if (project.getId() != null) {
                 Backlog backlog = backlogRepository.findByProjectIdentifier(projectId);
                 project.setBacklog(backlog);
             }
@@ -63,7 +72,7 @@ public class ProjectService {
             throw new ProjectIdException("Project ID '" + projectId + "' does not exists");
         }
 
-        if(!project.getProjectLeader().equals(username)){
+        if (!project.getProjectLeader().equals(username)) {
             throw new ProjectNotFoundException("Project not found in your account,not authorized");
         }
 
@@ -75,9 +84,9 @@ public class ProjectService {
         return projectRepository.findAllByProjectLeader(username);
     }
 
-    public void deleteProjectByIdentifier(String projectId,String username) {
+    public void deleteProjectByIdentifier(String projectId, String username) {
 
-        Project project = findProjectByIdentifier(projectId,username);
+        Project project = findProjectByIdentifier(projectId, username);
         projectRepository.delete(project);
     }
 }
