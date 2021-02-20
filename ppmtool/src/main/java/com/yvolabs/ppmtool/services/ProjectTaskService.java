@@ -15,62 +15,57 @@ public class ProjectTaskService {
     private final ProjectRepository projectRepository;
     private final BacklogRepository backlogRepository;
     private final ProjectTaskRepository projectTaskRepository;
+    private final ProjectService projectService;
 
     @Autowired
-    public ProjectTaskService(ProjectRepository projectRepository, BacklogRepository backlogRepository, ProjectTaskRepository projectTaskRepository) {
+    public ProjectTaskService(ProjectRepository projectRepository, BacklogRepository backlogRepository, ProjectTaskRepository projectTaskRepository, ProjectService projectService) {
         this.projectRepository = projectRepository;
         this.backlogRepository = backlogRepository;
         this.projectTaskRepository = projectTaskRepository;
+        this.projectService = projectService;
     }
 
 
-    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
+    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username) {
+        Project project = projectService.findProjectByIdentifier(projectIdentifier, username); // throws
+        Backlog backlog = project.getBacklog();
 
-        try {
-            Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
+        //set the BL to the PT
+        projectTask.setBacklog(backlog);
 
-            //set the BL to the PT
-            projectTask.setBacklog(backlog);
+        // Get BL sequence
+        Integer backlogSequence = backlog.getPTSequence();
 
-            // Get BL sequence
-            Integer backlogSequence = backlog.getPTSequence();
-
-            // Update the BL sequence
-            backlogSequence++;
-            backlog.setPTSequence(backlogSequence);
-
-
-            // Add sequence to Project Task
-            projectTask.setProjectSequence(projectIdentifier + "-" + backlogSequence);
-
-            projectTask.setProjectIdentifier(projectIdentifier);
-
-            //Initial status when status is null
-            if (projectTask.getStatus() == null || projectTask.getStatus().equals("") ) {
-                projectTask.setStatus("TO_DO");
-                // could use enums instead
-            }
-
-            //Initial priority when priority is null
-            if (projectTask.getPriority() == null || projectTask.getPriority() == 0) {
-                projectTask.setPriority(3);
-            }
+        // Update the BL sequence
+        backlogSequence++;
+        backlog.setPTSequence(backlogSequence);
 
 
-            return projectTaskRepository.save(projectTask);
+        // Add sequence to Project Task
+        projectTask.setProjectSequence(projectIdentifier + "-" + backlogSequence);
 
-        } catch (Exception e) {
-            throw new ProjectNotFoundException("Project not found");
+        projectTask.setProjectIdentifier(projectIdentifier);
+
+        //Initial status when status is null
+        if (projectTask.getStatus() == null || projectTask.getStatus().equals("")) {
+            projectTask.setStatus("TO_DO");
+            // could use enums instead
         }
+
+        //Initial priority when priority is null
+        if (projectTask.getPriority() == null || projectTask.getPriority() == 0) {
+            projectTask.setPriority(3);
+        }
+
+
+        return projectTaskRepository.save(projectTask);
+
 
     }
 
-    public Iterable<ProjectTask> findBacklogById(String id) {
-        Project project = projectRepository.findByProjectIdentifier(id);
+    public Iterable<ProjectTask> findBacklogById(String id, String username) {
 
-        if (project == null) {
-            throw new ProjectNotFoundException("Project with ID: '" + id + "' does not exist");
-        }
+        projectService.findProjectByIdentifier(id, username);
         return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
     }
 

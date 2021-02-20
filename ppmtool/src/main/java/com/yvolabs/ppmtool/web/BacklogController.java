@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("api/backlog")
@@ -28,19 +29,20 @@ public class BacklogController {
     public ResponseEntity<?> addProjectTaskToBacklog(@Valid
                                                      @RequestBody ProjectTask projectTask,
                                                      BindingResult result,
-                                                     @PathVariable("backlog_id") String backlog_id) {
+                                                     @PathVariable("backlog_id") String backlog_id,
+                                                     Principal principal) {
 
         ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationErrorResult(result);
         if (errorMap != null) return errorMap;
 
-        ProjectTask newProjectTask = projectTaskService.addProjectTask(backlog_id, projectTask);
+        ProjectTask newProjectTask = projectTaskService.addProjectTask(backlog_id, projectTask, principal.getName());
         return new ResponseEntity<>(newProjectTask, HttpStatus.CREATED);
 
     }
 
     @GetMapping("/{backlog_id}")
-    public Iterable<ProjectTask> getProjectBacklog(@PathVariable("backlog_id") String backlog_id) {
-        return projectTaskService.findBacklogById(backlog_id);
+    public Iterable<ProjectTask> getProjectBacklog(@PathVariable("backlog_id") String backlog_id,Principal principal) {
+        return projectTaskService.findBacklogById(backlog_id, principal.getName());
 
     }
 
