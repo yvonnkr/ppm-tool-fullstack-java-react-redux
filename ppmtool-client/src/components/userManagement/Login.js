@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/securityActions";
 import { displayErrorMessage } from "../../helpers/validationErrors";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const [state, setState] = useState({
     username: "",
     password: "",
@@ -14,13 +17,18 @@ const Login = () => {
   const { username, password, errors } = state;
 
   const stateErrors = useSelector((state) => state.errors);
+  const { validToken } = useSelector((state) => state.security);
 
   useEffect(() => {
+    if (validToken) {
+      history.push("/dashboard");
+    }
+
     setState((prevState) => ({
       ...prevState,
       errors: { ...stateErrors },
     }));
-  }, [stateErrors]);
+  }, [stateErrors, validToken]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

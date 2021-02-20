@@ -23,13 +23,18 @@ const Register = () => {
   const {username,fullName,password,confirmPassword,errors} = state
 
   const stateErrors = useSelector((state) => state.errors);
+  const { validToken } = useSelector((state) => state.security);
 
   useEffect(() => {
+    if (validToken) {
+      history.push("/dashboard");
+    }
+
     setState((prevState) => ({
       ...prevState,
       errors: { ...stateErrors },
     }));
-  }, [stateErrors]);
+  }, [stateErrors, validToken]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

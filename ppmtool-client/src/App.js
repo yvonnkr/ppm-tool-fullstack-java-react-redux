@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 
 import store from "./store";
 import Header from "./components/layout/Header";
+import Landing from "./components/layout/Landing";
 import Dashboard from "./components/Dashboard";
 import Register from "./components/userManagement/Register";
 import Login from "./components/userManagement/Login";
@@ -13,9 +14,14 @@ import ProjectBoard from "./components/projectBoard/ProjectBoard";
 import AddProjectTask from "./components/projectBoard/projectTasks/AddProjectTask";
 import UpdateProjectTask from "./components/projectBoard/projectTasks/UpdateProjectTask";
 
+import { handleLoginLogout } from "./helpers/handleLoginLogout";
+
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Landing from "./components/layout/Landing";
+
+//LOGIN-LOGOUT
+const jwtToken = localStorage.jwtToken;
+handleLoginLogout(jwtToken, store);
 
 const App = () => {
   return (
