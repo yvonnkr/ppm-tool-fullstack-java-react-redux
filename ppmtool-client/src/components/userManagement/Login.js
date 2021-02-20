@@ -1,19 +1,66 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../actions/securityActions";
+import { displayErrorMessage } from "../../helpers/validationErrors";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const [state, setState] = useState({
+    username: "",
+    password: "",
+    errors: {},
+  });
+
+  const { username, password, errors } = state;
+
+  const stateErrors = useSelector((state) => state.errors);
+
+  useEffect(() => {
+    setState((prevState) => ({
+      ...prevState,
+      errors: { ...stateErrors },
+    }));
+  }, [stateErrors]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    const userDetails = {
+      username,
+      password,
+    };
+
+    dispatch(login(userDetails));
+  };
+
   return (
     <div className="login">
       <div className="container">
         <div className="row">
           <div className="col-md-8 m-auto">
             <h1 className="display-4 text-center">Log In</h1>
-            <form action="dashboard.html">
+
+            {(errors.username || errors.password) &&
+              displayErrorMessage(`${errors.username} or ${errors.password}`)}
+
+            <form onSubmit={onSubmit}>
               <div className="form-group">
                 <input
-                  type="email"
+                  type="text"
                   className="form-control form-control-lg"
-                  placeholder="Email Address"
-                  name="email"
+                  placeholder="Username"
+                  name="username"
+                  value={username}
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group">
@@ -22,6 +69,8 @@ const Login = () => {
                   className="form-control form-control-lg"
                   placeholder="Password"
                   name="password"
+                  value={password}
+                  onChange={handleChange}
                 />
               </div>
               <input type="submit" className="btn btn-info btn-block mt-4" />

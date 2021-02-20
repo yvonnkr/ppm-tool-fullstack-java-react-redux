@@ -11,7 +11,7 @@ export const displayInputErrorMessage = (err) => (
 );
 
 export const displayErrorMessage = (errMsg) => (
-  <div class="alert alert-danger" role="alert">
+  <div className="alert alert-danger" role="alert">
     {errMsg}
   </div>
 );

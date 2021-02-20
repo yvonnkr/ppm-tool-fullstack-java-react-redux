@@ -19,17 +19,17 @@ export const createNewUser = (newUser, history) => async (dispatch) => {
   }
 };
 
-export const login = (loginRequest) => async (dispatch) => {
+export const login = (userDetails) => async (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
 
   try {
-    const { data } = await axios.post(`/api/users/login`, loginRequest);
+    const { data } = await axios.post(`/api/users/login`, userDetails);
 
     const token = data.token;
 
     localStorage.setItem("jwtToken", token);
 
-    setJWTToken(token);
+    setJWTToken(token); // sets axios.defaults.headers.common (view helper method)
 
     const decodedToken = jwt_decode(token);
 
