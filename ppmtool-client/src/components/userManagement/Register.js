@@ -1,6 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { createNewUser } from "../../actions/securityActions";
+import {
+  inputConditionalClassname,
+  displayInputErrorMessage,
+} from "../../helpers/validationErrors";
 
 const Register = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const [state, setState] = useState({
+    username: "",
+    fullName: "",
+    password: "",
+    confirmPassword: "",
+    errors: {},
+  });
+
+  // prettier-ignore
+  const {username,fullName,password,confirmPassword,errors} = state
+
+  const stateErrors = useSelector((state) => state.errors);
+
+  useEffect(() => {
+    setState((prevState) => ({
+      ...prevState,
+      errors: { ...stateErrors },
+    }));
+  }, [stateErrors]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    const newUser = {
+      username,
+      fullName,
+      password,
+      confirmPassword,
+    };
+
+    dispatch(createNewUser(newUser, history));
+  };
+
   return (
     <div className="register">
       <div className="container">
@@ -8,39 +60,51 @@ const Register = () => {
           <div className="col-md-8 m-auto">
             <h1 className="display-4 text-center">Sign Up</h1>
             <p className="lead text-center">Create your Account</p>
-            <form action="create-profile.html">
+            <form action="create-profile.html" onSubmit={onSubmit}>
               <div className="form-group">
                 <input
                   type="text"
-                  className="form-control form-control-lg"
-                  placeholder="Name"
-                  name="name"
-                  required
+                  className={inputConditionalClassname(errors.fullName)}
+                  placeholder="Full Name"
+                  name="fullName"
+                  value={fullName}
+                  onChange={handleChange}
                 />
+                {errors.fullName && displayInputErrorMessage(errors.fullName)}
               </div>
               <div className="form-group">
                 <input
-                  type="email"
-                  className="form-control form-control-lg"
-                  placeholder="Email Address"
-                  name="email"
+                  type="text"
+                  className={inputConditionalClassname(errors.username)}
+                  placeholder="Email Address (Username)"
+                  name="username"
+                  value={username}
+                  onChange={handleChange}
                 />
+                {errors.username && displayInputErrorMessage(errors.username)}
               </div>
               <div className="form-group">
                 <input
                   type="password"
-                  className="form-control form-control-lg"
+                  className={inputConditionalClassname(errors.password)}
                   placeholder="Password"
                   name="password"
+                  value={password}
+                  onChange={handleChange}
                 />
+                {errors.password && displayInputErrorMessage(errors.password)}
               </div>
               <div className="form-group">
                 <input
                   type="password"
-                  className="form-control form-control-lg"
+                  className={inputConditionalClassname(errors.confirmPassword)}
                   placeholder="Confirm Password"
-                  name="password2"
+                  name="confirmPassword"
+                  value={confirmPassword}
+                  onChange={handleChange}
                 />
+                {errors.confirmPassword &&
+                  displayInputErrorMessage(errors.confirmPassword)}
               </div>
               <input type="submit" className="btn btn-info btn-block mt-4" />
             </form>
