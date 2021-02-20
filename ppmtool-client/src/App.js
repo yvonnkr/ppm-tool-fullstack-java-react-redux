@@ -3,8 +3,10 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import store from "./store";
-import Dashboard from "./components/Dashboard";
 import Header from "./components/layout/Header";
+import Dashboard from "./components/Dashboard";
+import Register from "./components/userManagement/Register";
+import Login from "./components/userManagement/Login";
 import AddProject from "./components/project/AddProject";
 import UpdateProject from "./components/project/UpdateProject";
 import ProjectBoard from "./components/projectBoard/ProjectBoard";
@@ -13,6 +15,7 @@ import UpdateProjectTask from "./components/projectBoard/projectTasks/UpdateProj
 
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Landing from "./components/layout/Landing";
 
 const App = () => {
   return (
@@ -20,6 +23,13 @@ const App = () => {
       <BrowserRouter>
         <div className="App">
           <Header />
+
+          {/* public routes */}
+          <Route exact path="/" component={Landing} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
+
+          {/* private routes */}
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/addProject" component={AddProject} />
           <Route exact path="/updateProject/:id" component={UpdateProject} />
@@ -30,7 +40,6 @@ const App = () => {
             path="/updateProjectTask/:backlog_id/:pt_id"
             component={UpdateProjectTask}
           />
-          <Route exact path="/" component={Dashboard} />
         </div>
       </BrowserRouter>
     </Provider>
