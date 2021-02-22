@@ -1,8 +1,11 @@
 import jwt_decode from "jwt-decode";
 import { setJWTToken } from "./securityUtils";
 import { SET_CURRENT_USER } from "../actions/types";
+import { logout } from "../actions/securityActions";
 
-export const handleLoginLogout = (jwtToken, store) => {
+export const handleLoginLogout = async (store) => {
+  const jwtToken = localStorage.jwtToken;
+
   if (jwtToken) {
     setJWTToken(jwtToken);
     const decodedJwtToken = jwt_decode(jwtToken);
@@ -12,10 +15,11 @@ export const handleLoginLogout = (jwtToken, store) => {
       payload: decodedJwtToken,
     });
 
+    // Logout
     const currentTime = Date.now() / 1000;
     if (decodedJwtToken.exp < currentTime) {
-      //handle logout
-      //window.location.href = "/";
+      store.dispatch(logout());
+      window.location.href = "/";
     }
   }
 };

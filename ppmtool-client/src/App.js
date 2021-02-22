@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 
@@ -20,8 +20,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 //LOGIN-LOGOUT
-const jwtToken = localStorage.jwtToken;
-handleLoginLogout(jwtToken, store);
+handleLoginLogout(store);
 
 const App = () => {
   return (
