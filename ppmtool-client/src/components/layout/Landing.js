@@ -1,9 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Landing = () => {
   const { validToken, user } = useSelector((state) => state.security);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (validToken && user) {
+      history.push("/dashboard");
+    }
+  }, []);
 
   return (
     <div className="landing">
@@ -18,22 +25,16 @@ const Landing = () => {
                 Create your account to join active projects or start your own
               </p>
               <hr />
-              {!validToken && user && (
-                <>
-                  <Link
-                    className="btn btn-lg btn-outline-info mr-2"
-                    to="/register"
-                  >
-                    Sign Up
-                  </Link>
-                  <Link
-                    className="btn btn-lg btn-outline-secondary mr-2"
-                    to="/login"
-                  >
-                    Login
-                  </Link>
-                </>
-              )}
+
+              <Link className="btn btn-lg btn-outline-info mr-2" to="/register">
+                Sign Up
+              </Link>
+              <Link
+                className="btn btn-lg btn-outline-secondary mr-2"
+                to="/login"
+              >
+                Login
+              </Link>
             </div>
           </div>
         </div>

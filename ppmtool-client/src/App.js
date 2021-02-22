@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import store from "./store";
@@ -15,6 +15,7 @@ import AddProjectTask from "./components/projectBoard/projectTasks/AddProjectTas
 import UpdateProjectTask from "./components/projectBoard/projectTasks/UpdateProjectTask";
 
 import { handleLoginLogout } from "./helpers/handleLoginLogout";
+import SecuredRoute from "./helpers/SecuredRoute";
 
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -35,16 +36,30 @@ const App = () => {
           <Route exact path="/login" component={Login} />
 
           {/* private routes */}
-          <Route exact path="/dashboard" component={Dashboard} />
-          <Route exact path="/addProject" component={AddProject} />
-          <Route exact path="/updateProject/:id" component={UpdateProject} />
-          <Route exact path="/projectBoard/:id" component={ProjectBoard} />
-          <Route exact path="/addProjectTask/:id" component={AddProjectTask} />
-          <Route
-            exact
-            path="/updateProjectTask/:backlog_id/:pt_id"
-            component={UpdateProjectTask}
-          />
+          <Switch>
+            <SecuredRoute exact path="/dashboard" component={Dashboard} />
+            <SecuredRoute exact path="/addProject" component={AddProject} />
+            <SecuredRoute
+              exact
+              path="/updateProject/:id"
+              component={UpdateProject}
+            />
+            <SecuredRoute
+              exact
+              path="/projectBoard/:id"
+              component={ProjectBoard}
+            />
+            <SecuredRoute
+              exact
+              path="/addProjectTask/:id"
+              component={AddProjectTask}
+            />
+            <SecuredRoute
+              exact
+              path="/updateProjectTask/:backlog_id/:pt_id"
+              component={UpdateProjectTask}
+            />
+          </Switch>
         </div>
       </BrowserRouter>
     </Provider>
