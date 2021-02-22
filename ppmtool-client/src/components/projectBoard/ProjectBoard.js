@@ -33,7 +33,7 @@ const ProjectBoard = () => {
       if (errors) {
         return (
           <div className="alert alert-danger text-center" role="alert">
-            {errors && errors.projectNotfound}
+            {(errors && errors.projectNotfound) || errors.projectIdentifier}
           </div>
         );
       } else {
